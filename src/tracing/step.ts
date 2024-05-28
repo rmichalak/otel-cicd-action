@@ -1,5 +1,11 @@
 import * as core from "@actions/core";
-import { TraceAPI, Context, SpanStatusCode, Span } from "@opentelemetry/api";
+import {
+  TraceAPI,
+  Context,
+  SpanStatusCode,
+  Span,
+  SpanKind,
+} from "@opentelemetry/api";
 import { Tracer } from "@opentelemetry/sdk-trace-base";
 import {
   WorkflowRunJobStep,
@@ -42,6 +48,7 @@ export async function traceWorkflowRunStep({
   const span = tracer.startSpan(
     step.name,
     {
+      kind: SpanKind.CLIENT,
       attributes: {
         "github.job.step.name": step.name,
         "github.job.step.number": step.number,

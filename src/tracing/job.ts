@@ -6,6 +6,7 @@ import {
   Context,
   trace,
   SpanContext,
+  SpanKind,
 } from "@opentelemetry/api";
 import { BasicTracerProvider, Tracer } from "@opentelemetry/sdk-trace-base";
 import * as core from "@actions/core";
@@ -72,6 +73,7 @@ export async function traceWorkflowRunJobs({
     workflowRunJobs.workflowRun.name ||
       `${workflowRunJobs.workflowRun.workflow_id}`,
     {
+      kind: SpanKind.CLIENT,
       attributes: {
         "github.workflow_id": workflowRunJobs.workflowRun.workflow_id,
         "github.run_id": workflowRunJobs.workflowRun.id,
@@ -136,7 +138,11 @@ export async function traceWorkflowRunJobs({
     if (workflowRunJobs.jobs.length > 0) {
       const firstJob = workflowRunJobs.jobs[0];
       const queueCtx = trace.setSpan(ROOT_CONTEXT, rootSpan);
-      const queueSpan = tracer.startSpan("Queued", { startTime }, queueCtx);
+      const queueSpan = tracer.startSpan(
+        "Queued",
+        { kind: SpanKind.CLIENT, startTime },
+        queueCtx,
+      );
       queueSpan.end(new Date(firstJob.started_at));
     }
 
@@ -186,6 +192,7 @@ async function traceWorkflowRunJob({
   const span = tracer.startSpan(
     job.name,
     {
+      kind: SpanKind.CLIENT,
       attributes: {
         "github.job.id": job.id,
         "github.job.name": job.name,
