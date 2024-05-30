@@ -62,7 +62,7 @@ async function traceWorkflowRunJobs({ provider, workflowRunJobs, }) {
     }
     const rootSpan = tracer.startSpan(workflowRunJobs.workflowRun.name ||
         `${workflowRunJobs.workflowRun.workflow_id}`, {
-        kind: api_1.SpanKind.CLIENT,
+        kind: api_1.SpanKind.SERVER,
         attributes: {
             "github.workflow_id": workflowRunJobs.workflowRun.workflow_id,
             "github.run_id": workflowRunJobs.workflowRun.id,
@@ -109,7 +109,7 @@ async function traceWorkflowRunJobs({ provider, workflowRunJobs, }) {
         if (workflowRunJobs.jobs.length > 0) {
             const firstJob = workflowRunJobs.jobs[0];
             const queueCtx = api_1.trace.setSpan(api_1.ROOT_CONTEXT, rootSpan);
-            const queueSpan = tracer.startSpan("Queued", { kind: api_1.SpanKind.CLIENT, startTime }, queueCtx);
+            const queueSpan = tracer.startSpan("Queued", { kind: api_1.SpanKind.SERVER, startTime }, queueCtx);
             queueSpan.end(new Date(firstJob.started_at));
         }
         for (let i = 0; i < workflowRunJobs.jobs.length; i++) {
@@ -141,7 +141,7 @@ async function traceWorkflowRunJob({ parentContext, trace, parentSpan, tracer, j
     const startTime = new Date(job.started_at);
     const completedTime = new Date(job.completed_at);
     const span = tracer.startSpan(job.name, {
-        kind: api_1.SpanKind.CLIENT,
+        kind: api_1.SpanKind.SERVER,
         attributes: {
             "github.job.id": job.id,
             "github.job.name": job.name,

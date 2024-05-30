@@ -73,7 +73,7 @@ export async function traceWorkflowRunJobs({
     workflowRunJobs.workflowRun.name ||
       `${workflowRunJobs.workflowRun.workflow_id}`,
     {
-      kind: SpanKind.CLIENT,
+      kind: SpanKind.SERVER,
       attributes: {
         "github.workflow_id": workflowRunJobs.workflowRun.workflow_id,
         "github.run_id": workflowRunJobs.workflowRun.id,
@@ -140,7 +140,7 @@ export async function traceWorkflowRunJobs({
       const queueCtx = trace.setSpan(ROOT_CONTEXT, rootSpan);
       const queueSpan = tracer.startSpan(
         "Queued",
-        { kind: SpanKind.CLIENT, startTime },
+        { kind: SpanKind.SERVER, startTime },
         queueCtx,
       );
       queueSpan.end(new Date(firstJob.started_at));
@@ -192,7 +192,7 @@ async function traceWorkflowRunJob({
   const span = tracer.startSpan(
     job.name,
     {
-      kind: SpanKind.CLIENT,
+      kind: SpanKind.SERVER,
       attributes: {
         "github.job.id": job.id,
         "github.job.name": job.name,

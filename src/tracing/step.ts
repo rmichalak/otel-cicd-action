@@ -48,7 +48,7 @@ export async function traceWorkflowRunStep({
   const span = tracer.startSpan(
     step.name,
     {
-      kind: SpanKind.CLIENT,
+      kind: SpanKind.SERVER,
       attributes: {
         "github.job.step.name": step.name,
         "github.job.step.number": step.number,

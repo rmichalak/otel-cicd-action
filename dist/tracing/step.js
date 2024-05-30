@@ -42,7 +42,7 @@ async function traceWorkflowRunStep({ job, parentContext, parentSpan, trace, tra
     const startTime = new Date(step.started_at);
     const completedTime = new Date(step.completed_at);
     const span = tracer.startSpan(step.name, {
-        kind: api_1.SpanKind.CLIENT,
+        kind: api_1.SpanKind.SERVER,
         attributes: {
             "github.job.step.name": step.name,
             "github.job.step.number": step.number,
